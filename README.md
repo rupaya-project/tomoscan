@@ -1,4 +1,4 @@
-# TomoChain Explorer - Tomoscan
+# Rupaya's Block Explorer - Scan
 
 [![Join the chat at https://gitter.im/tomochain/tomoscan](https://badges.gitter.im/tomochain/tomoscan.svg)](https://gitter.im/tomochain/tomoscan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
