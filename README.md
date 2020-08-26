@@ -2,9 +2,9 @@
 
 [![Join the chat at https://gitter.im/tomochain/tomoscan](https://badges.gitter.im/tomochain/tomoscan.svg)](https://gitter.im/tomochain/tomoscan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tomoscan is a BlockExplorer for **TomoChain**, built with VueJS, Nuxt and MongoDB. Tomoscan allows you to explore and search the **TomoChain** for transactions, addresses, tokens, prices and other activities taking place on **TomoChain**.
+Tomoscan is a BlockExplorer for **Rupaya**, built with VueJS, Nuxt and MongoDB. Tomoscan allows you to explore and search the **Rupaya** for transactions, addresses, tokens, prices and other activities taking place on **Rupaya**.
 
-A demo instance connected to the **TomoChain testnet** is available at [scan.testnet.tomochain.com](https://scan.testnet.tomochain.com/).
+A demo instance connected to the **Rupaya testnet** is available at [scan.testnet.tomochain.com](https://scan.testnet.tomochain.com/).
 
 ## Current Features
 - Browse blocks, transactions, accounts and contracts

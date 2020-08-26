@@ -1,7 +1,7 @@
 {
   "name": "tomoscan",
   "version": "1.7.0",
-  "description": "TomoScan - TomoChain Block Explorer",
+  "description": "TomoScan - Rupaya Block Explorer",
   "scripts": {
     "lint": "eslint --cache ./ --ext .vue --ext .js --env mocha",
     "lint-fix": "eslint --cache ./ --ext .vue --ext .js --env mocha --fix",

@@ -67,7 +67,7 @@ const TransactionHelper = {
                     {
                         transactionHash: log.transactionHash,
                         infoName: 'Swap rate',
-                        infoValue: `1 TOMO = ${tomoRate} CONST`
+                        infoValue: `1 RUPX = ${tomoRate} CONST`
                     }
                 ]
                 await db.TxExtraInfo.insertMany(txExtraInfo)

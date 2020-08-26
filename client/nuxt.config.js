@@ -28,7 +28,7 @@ module.exports = {
             },
             {
                 property: 'og:title',
-                content: 'TomoScan - TomoChain block explorer'
+                content: 'TomoScan - Rupaya block explorer'
             },
             {
                 property: 'og:description',

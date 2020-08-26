@@ -227,7 +227,7 @@
                             v{{ version }}</a>
 
                             <code class="text-muted copyright__code">
-                                TomoChain/stable/linux-amd64/golang
+                                Rupaya/stable/linux-amd64/golang
                             </code>
                         </p>
                     </b-col>

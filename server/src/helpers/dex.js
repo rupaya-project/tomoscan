@@ -16,7 +16,7 @@ const DexHelper = {
             const bt = orders[i].baseToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, bt)) {
                 if (bt === TomoToken) {
-                    decimals[bt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[bt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: bt })
                     if (token) {
@@ -34,7 +34,7 @@ const DexHelper = {
             const qt = orders[i].quoteToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, qt)) {
                 if (qt === TomoToken) {
-                    decimals[qt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[qt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: qt })
                     if (token) {
@@ -94,7 +94,7 @@ const DexHelper = {
             const ct = orders[i].collateralToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, lt)) {
                 if (lt === TomoToken) {
-                    decimals[lt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[lt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: lt })
                     if (token) {
@@ -111,7 +111,7 @@ const DexHelper = {
             }
             if (!Object.prototype.hasOwnProperty.call(decimals, ct)) {
                 if (ct === TomoToken) {
-                    decimals[ct] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[ct] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: ct })
                     if (token) {
@@ -169,7 +169,7 @@ const DexHelper = {
             const ct = orders[i].collateralToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, ct)) {
                 if (ct === TomoToken) {
-                    decimals[ct] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[ct] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: ct })
                     if (token) {
@@ -212,7 +212,7 @@ const DexHelper = {
             const bt = trades[i].baseToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, bt)) {
                 if (bt === TomoToken) {
-                    decimals[bt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[bt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: bt })
                     if (token) {
@@ -230,7 +230,7 @@ const DexHelper = {
             const qt = trades[i].quoteToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, qt)) {
                 if (qt === TomoToken) {
-                    decimals[qt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[qt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: qt })
                     if (token) {
@@ -284,7 +284,7 @@ const DexHelper = {
             const ct = trades[i].collateralToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, ct)) {
                 if (ct === TomoToken) {
-                    decimals[ct] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[ct] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: ct })
                     if (token) {
@@ -302,7 +302,7 @@ const DexHelper = {
             const lt = trades[i].lendingToken.toLowerCase()
             if (!Object.prototype.hasOwnProperty.call(decimals, lt)) {
                 if (lt === TomoToken) {
-                    decimals[lt] = { decimals: 18, symbol: 'TOMO' }
+                    decimals[lt] = { decimals: 18, symbol: 'RUPX' }
                 } else {
                     const token = await db.Token.findOne({ hash: lt })
                     if (token) {
