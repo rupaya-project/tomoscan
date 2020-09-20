@@ -1,7 +1,7 @@
 {
   "APP_ENV": "prod",
-  "MONGODB_URI": "mongodb://mongo:27017/tomoscan",
-  "MONGODB_DEX_URI": "mongodb://mongo:27017/tomodex",
+  "MONGODB_URI": "mongodb://mongo:27017/scan",
+  "MONGODB_DEX_URI": "mongodb://mongo:27017/dex",
   "ELASTICSEARCH": "http://localhost:9200",
   "GetDataFromElasticSearch": true,
   "MaxBlockIndex": 150000,
@@ -14,11 +14,11 @@
   "logs": {
     "level": "debug"
   },
-  "TOMODEX_API": "https://dex.rupx.io/",
-  "RELAYER_API": "https://relayer.rupx.io/",
+  "TOMODEX_API": "https://dex.testnet.rupx.io/",
+  "RELAYER_API": "https://relayer.testnet.rupx.io/",
 
-  "WEB3_URI": "https://rpc.rupx.io/",
-  "WEB3_WS_URI": "wss://ws.rupx.io",
+  "WEB3_URI": "https://rpc.testnet.rupx.io:7050",
+  "WEB3_WS_URI": "wss://ws.testnet.rupx.io:8050",
   "DEBUG_QUERY": false,
 
   "BASE_UNIT": "RUPX",
