@@ -11,8 +11,8 @@ const elastic = require('../helpers/elastic')
 const consumer = {}
 consumer.name = 'TokenProcess'
 consumer.processNumber = 1
-consumer.task = async function (job, done) {
-    const address = job.data.address.toLowerCase()
+consumer.task = async function (job) {
+    const address = job.address.toLowerCase()
     logger.info('Process token: %s', address)
     try {
         const token = await db.Token.findOneAndUpdate({ hash: address }, { hash: address }, { upsert: true, new: true })
@@ -59,13 +59,22 @@ consumer.task = async function (job, done) {
         delete t._id
         delete t.id
         t.totalSupplyNumber = String(t.totalSupplyNumber)
-        await elastic.index(t.hash, 'tokens', t)
+        await elastic.index(t.hash, 'tokens', {
+            decimals: token.decimals,
+            hash: token.hash,
+            isMintable: token.isMintable,
+            name: token.name,
+            symbol: token.symbol,
+            totalSupply: token.totalSupply,
+            totalSupplyNumber: token.totalSupplyNumber,
+            type: token.type
+        })
     } catch (e) {
         logger.warn('cannot process token %s. Error %s', address, e)
-        return done(e)
+        return false
     }
 
-    return done()
+    return true
 }
 
 module.exports = consumer

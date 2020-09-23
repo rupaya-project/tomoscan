@@ -1,36 +1,39 @@
-'use strict'
-
-const kue = require('kue')
+const amqp = require('amqplib')
 const config = require('config')
-const logger = require('../helpers/logger')
-const Redis = require('ioredis')
 
-// fix warning max listener
-process.setMaxListeners(1000)
+const rabitmqSettings = {
+    protocol: 'amqp',
+    hostname: config.get('rabbitmq.hostname'),
+    port: config.get('rabbitmq.port'),
+    username: config.get('rabbitmq.username'),
+    password: config.get('rabbitmq.password'),
+    authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL']
+}
 
-const q = kue.createQueue({
-    prefix: config.get('redis.prefix'),
-    redis: {
-        createClientFactory: function () {
-            return new Redis({
-                port: config.get('redis.port'),
-                host: config.get('redis.host'),
-                password: config.get('redis.password')
-            })
-        }
+const Queue = {
+    channel: async () => {
+        const conn = await amqp.connect(rabitmqSettings)
+        const ch = await conn.createChannel()
+        return { conn, ch }
+    },
+    newQueue: async (queueName, data) => {
+        const { conn, ch } = await Queue.channel()
+        await ch.sendToQueue(queueName, Buffer.from(JSON.stringify(data), { durable: false }), {
+            persistent: true
+        })
+        await ch.close()
+        await conn.close()
+    },
+
+    countJob: async (queueName) => {
+        const { conn, ch } = await Queue.channel()
+        const count = await ch.assertQueue(queueName, { durable: false })
+        const num = count.messageCount
+
+        await ch.close()
+        await conn.close()
+        return num
     }
-    // redis: {
-    //     port: config.get('redis.port'),
-    //     host: config.get('redis.host'),
-    //     auth: config.get('redis.password'),
-    //     'socket_keepalive': true
-    // }
-})
-q.setMaxListeners(1000)
-q.watchStuckJobs()
+}
 
-q.on('error', function (err) {
-    logger.error('REDIS-KUE ERROR %s', err)
-})
-
-module.exports = q
+module.exports = Queue

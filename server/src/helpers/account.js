@@ -38,10 +38,12 @@ const AccountHelper = {
         if (chainBalance !== null) {
             _account.balance = chainBalance
             const bn = new BigNumber(chainBalance)
-            _account.balanceNumber = bn.dividedBy(10 ** 18)
+            _account.balanceNumber = bn.dividedBy(10 ** 18).toNumber()
         }
-        const acc = await db.Account.findOneAndUpdate({ hash: hash }, _account, { upsert: true, new: true })
-        return acc
+        if (_account.balanceNumber > 0 || _account.code !== '0x') {
+            return db.Account.findOneAndUpdate({ hash: hash }, _account, { upsert: true, new: true })
+        }
+        return _account
     },
     processAccount:async (hash) => {
         hash = hash.toLowerCase()
@@ -63,7 +65,7 @@ const AccountHelper = {
 
             if (!Object.prototype.hasOwnProperty.call(_account, 'code')) {
                 const code = await web3.eth.getCode(hash)
-                const q = require('../queues')
+                const Queue = require('../queues')
                 if (code !== '0x') {
                     _account.isContract = true
                 }
@@ -71,9 +73,7 @@ const AccountHelper = {
 
                 const isToken = await TokenHelper.checkIsToken(code)
                 if (isToken) {
-                    q.create('TokenProcess', { address: hash })
-                        .priority('normal').removeOnComplete(true)
-                        .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
+                    Queue.newQueue('TokenProcess', { address: hash })
                 }
                 _account.isToken = isToken
             }
@@ -86,10 +86,12 @@ const AccountHelper = {
             if (chainBalance !== null) {
                 _account.balance = chainBalance
                 const bn = new BigNumber(chainBalance)
-                _account.balanceNumber = bn.dividedBy(10 ** 18)
+                _account.balanceNumber = bn.dividedBy(10 ** 18).toNumber()
             }
-            await db.Account.updateOne({ hash: hash }, _account,
-                { upsert: true, new: true })
+            if (_account.balanceNumber > 0 || _account.code !== '0x') {
+                await db.Account.updateOne({ hash: hash }, _account,
+                    { upsert: true, new: true })
+            }
         } catch (e) {
             logger.warn('cannot process account %s. Error %s', hash, e)
         }
@@ -97,7 +99,11 @@ const AccountHelper = {
     async formatAccount (account) {
         // Find txn create from.
         let fromTxn = null
-        account = account.toJSON()
+        try {
+            account = account.toJSON()
+        } catch (e) {
+            logger.warn('account is not from db %s', e)
+        }
         if (account.isContract) {
             const tx = await db.Tx.findOne({
                 contractAddress: account.hash

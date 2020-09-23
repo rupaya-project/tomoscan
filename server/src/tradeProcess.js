@@ -3,7 +3,7 @@ const Web3Util = require('./helpers/web3')
 const BigNumber = require('bignumber.js')
 const logger = require('./helpers/logger')
 const TomoToken = '0x0000000000000000000000000000000000000001'
-const q = require('./queues')
+const Queue = require('./queues')
 
 const decimalFunction = '0x313ce567'
 
@@ -67,7 +67,7 @@ async function run () {
         }
 
         if (baseToken.toLowerCase() !== '0x0000000000000000000000000000000000000001') {
-            q.create('TokenHolderProcess', {
+            Queue.newQueue('TokenHolderProcess', {
                 token: JSON.stringify({
                     from: seller,
                     to: buyer,
@@ -75,8 +75,6 @@ async function run () {
                     value: amount
                 })
             })
-                .priority('normal').removeOnComplete(true)
-                .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
         }
 
         let quoteDecimal

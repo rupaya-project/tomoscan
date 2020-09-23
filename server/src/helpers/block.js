@@ -21,7 +21,7 @@ const BlockHelper = {
         const web3 = await Web3Util.getWeb3()
 
         const start = new Date()
-        const _block = await web3.eth.getBlock(blockNumber)
+        const _block = await web3.eth.getBlock(blockNumber, true)
         const end = new Date() - start
         logger.info(`Execution time : %dms web3.eth.getBlock(${blockNumber})`, end)
 
@@ -38,28 +38,6 @@ const BlockHelper = {
         _block.timestamp = timestamp
         _block.e_tx = _block.transactions.length
 
-        try {
-            const data = {
-                jsonrpc: '2.0',
-                method: 'eth_getBlockFinalityByHash',
-                params: [_block.hash],
-                id: 88
-            }
-            const response = await axios.post(config.get('WEB3_URI'), data)
-            const result = response.data
-
-            let finalityNumber = parseInt(result.result)
-            // blockNumber = 0 is genesis block
-            if (parseInt(blockNumber) === 0) {
-                finalityNumber = 100
-            }
-
-            _block.finality = finalityNumber
-        } catch (e) {
-            logger.warn('Cannot get block finality %s', blockNumber)
-            logger.warn(e)
-        }
-
         const txs = _block.transactions
         delete _block.transactions
         _block.status = true
@@ -70,7 +48,23 @@ const BlockHelper = {
 
         await db.Block.updateOne({ number: _block.number }, _block,
             { upsert: true, new: true })
-        await elastic.index(_block.hash, 'blocks', _block)
+        await elastic.index(_block.hash, 'blocks', {
+            difficulty: _block.difficulty,
+            e_tx: _block.e_tx,
+            finality: _block.finality,
+            gasLimit: _block.gasLimit,
+            gasUsed: _block.gasUsed,
+            hash: _block.hash,
+            number: _block.number,
+            parentHash: _block.parentHash,
+            signer: _block.signer,
+            size: _block.size,
+            stateRoot: _block.stateRoot,
+            timestamp: (new Date(_block.timestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+            totalDifficulty: _block.totalDifficulty,
+            transactionsRoot: _block.transactionsRoot,
+            uncles: _block.uncles
+        })
 
         if (_block.number % config.get('BLOCK_PER_EPOCH') === 0) {
             const slashedNode = []
@@ -86,15 +80,6 @@ const BlockHelper = {
                 }
             }
 
-            const buff = Buffer.from(blk.extraData.substring(2), 'hex')
-            const sbuff = buff.slice(32, buff.length - 65)
-            const signers = []
-            if (sbuff.length > 0) {
-                for (let i = 1; i <= sbuff.length / 20; i++) {
-                    const address = sbuff.slice((i - 1) * 20, i * 20)
-                    signers.push('0x' + address.toString('hex'))
-                }
-            }
             const epoch = _block.number / config.get('BLOCK_PER_EPOCH')
 
             // TODO: update slash for next 5 epochs

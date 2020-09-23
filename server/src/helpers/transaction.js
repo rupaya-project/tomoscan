@@ -16,7 +16,7 @@ const elastic = require('./elastic')
 
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
 const TransactionHelper = {
-    parseLog: async (log) => {
+    parseLog: async (log, timestamp) => {
         const TOPIC_TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
         // Topic of Constant-NetworkProxy contract
@@ -25,18 +25,12 @@ const TransactionHelper = {
             const address = log.address.toLowerCase()
             // Add account and token if not exist in db.
             const token = await db.Token.findOne({ hash: address })
-            const q = require('../queues')
+            const Queue = require('../queues')
             if (!token) {
-                q.create('AccountProcess', { listHash: JSON.stringify([address]) })
-                    .priority('low').removeOnComplete(true)
-                    .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
-                q.create('TokenProcess', { address: address })
-                    .priority('low').removeOnComplete(true)
-                    .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
+                Queue.newQueue('AccountProcess', { listHash: JSON.stringify([address]) })
+                Queue.newQueue('TokenProcess', { address: address })
             }
-            q.create('TokenTransactionProcess', { log: JSON.stringify(log) })
-                .priority('normal').removeOnComplete(true)
-                .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
+            Queue.newQueue('TokenTransactionProcess', { log: JSON.stringify(log), timestamp: timestamp })
         } else if (log.topics[0] === TopicExecuteTrade) {
             const data = log.data.replace('0x', '')
             const params = []
@@ -88,7 +82,7 @@ const TransactionHelper = {
                 delete tx._id
                 delete tx.id
             }
-            const q = require('../queues')
+            const Queue = require('../queues')
 
             if (!tx) {
                 return false
@@ -166,26 +160,15 @@ const TransactionHelper = {
             }
 
             if (listHash.length > 0) {
-                q.create('AccountProcess', { listHash: JSON.stringify(listHash) })
-                    .priority('normal').removeOnComplete(true)
-                    .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
+                Queue.newQueue('AccountProcess', { listHash: JSON.stringify(listHash) })
             }
 
             tx.cumulativeGasUsed = receipt.cumulativeGasUsed
             tx.gasUsed = receipt.gasUsed
-            tx.timestamp = timestamp
+            tx.timestamp = new Date(timestamp)
             if (receipt.blockNumber) {
                 tx.blockNumber = receipt.blockNumber
             }
-
-            // q.create('FollowProcess', {
-            //     transaction: hash,
-            //     blockNumber: tx.blockNumber,
-            //     fromAccount: tx.from,
-            //     toAccount: tx.to
-            // })
-            //     .priority('low').removeOnComplete(true)
-            //     .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
 
             // Parse log.
             const logs = receipt.logs
@@ -195,7 +178,7 @@ const TransactionHelper = {
                 await db.TokenNftTx.deleteMany({ transactionHash: tx.hash })
                 for (let i = 0; i < logs.length; i++) {
                     const log = logs[i]
-                    await TransactionHelper.parseLog(log)
+                    await TransactionHelper.parseLog(log, timestamp)
                 }
                 await db.Log.deleteMany({ transactionHash: receipt.hash })
                 await db.Log.insertMany(logs)
@@ -219,7 +202,7 @@ const TransactionHelper = {
             try {
                 await elastic.deleteByQuery('internal-tx', { match: { hash: hash } })
             } catch (e) {
-                logger.warn('dont have internal tx for tx %s', hash)
+                // logger.warn('dont have internal tx for tx %s', hash)
             }
 
             if (tx.to !== contractAddress.BlockSigner && tx.to !== contractAddress.TomoRandomize) {
@@ -233,9 +216,7 @@ const TransactionHelper = {
                         from: item.from,
                         to: item.to,
                         value: item.value,
-                        timestamp: new Date(item.timestamp).getTime(),
-                        createdAt: item.createdAt,
-                        updatedAt: item.updatedAt
+                        timestamp: (new Date(item.timestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')
                     }
                     await elastic.indexWithoutId('internal-tx', idx)
                 }
@@ -261,7 +242,26 @@ const TransactionHelper = {
 
             await db.Tx.updateOne({ hash: hash }, tx,
                 { upsert: true, new: true })
-            await elastic.index(tx.hash, 'transactions', tx)
+            await elastic.index(tx.hash, 'transactions', {
+                blockHash: tx.blockHash,
+                blockNumber: tx.blockNumber,
+                cumulativeGasUsed: tx.cumulativeGasUsed,
+                from: tx.from,
+                from_model: tx.from_model,
+                gas: tx.gas,
+                gasPrice: tx.gasPrice,
+                gasUsed: tx.gasUsed,
+                hash: tx.hash,
+                i_tx: tx.i_tx,
+                nonce: tx.nonce,
+                status: tx.status,
+                timestamp: (new Date(tx.timestamp)).toISOString()
+                    .replace(/T/, ' ').replace(/\..+/, ''),
+                to: tx.to,
+                to_model: tx.to_model,
+                transactionIndex: tx.transactionIndex,
+                value: tx.value
+            })
         } catch (e) {
             logger.warn('cannot crawl transaction %s with error %s. Sleep 2 second and retry', hash, e)
             await sleep(2000)
@@ -376,7 +376,7 @@ const TransactionHelper = {
     },
     getInternalTx: async (transaction) => {
         const itx = await db.InternalTx.find({ hash: transaction.hash })
-        if (transaction.i_tx === itx.length) {
+        if (itx.length > 0) {
             return itx
         }
 
@@ -421,7 +421,7 @@ const TransactionHelper = {
         let internals = []
         for (let i = 0; i < resultCalls.length; i++) {
             const call = resultCalls[i]
-            if (call.value !== '0x0') {
+            if (Object.prototype.hasOwnProperty.call(call, 'value') && call.value !== '0x0') {
                 internals.push({
                     hash: txHash,
                     blockNumber: blockNumber,

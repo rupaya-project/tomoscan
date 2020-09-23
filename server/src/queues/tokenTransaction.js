@@ -11,17 +11,18 @@ const elastic = require('../helpers/elastic')
 const consumer = {}
 consumer.name = 'TokenTransactionProcess'
 consumer.processNumber = 2
-consumer.task = async function (job, done) {
+consumer.task = async function (job) {
     const web3 = await Web3Utils.getWeb3()
     try {
-        const log = JSON.parse(job.data.log)
-        logger.info('Process token transaction: ')
+        const log = JSON.parse(job.log)
+        const timestamp = new Date(job.timestamp)
+        logger.info('Process token tx for transaction: %s', log.transactionHash)
         const _log = log
         if (typeof log.topics[1] === 'undefined' ||
             typeof log.topics[2] === 'undefined') {
-            return done()
+            return true
         }
-        const q = require('./index')
+        const Queue = require('./index')
 
         if (log.topics[1]) {
             _log.from = await utils.unformatAddress(log.topics[1])
@@ -31,6 +32,7 @@ consumer.task = async function (job, done) {
         }
         _log.address = _log.address.toLowerCase()
         const transactionHash = _log.transactionHash.toLowerCase()
+        _log.timestamp = timestamp
 
         const token = await db.Token.findOne({ hash: _log.address })
         let tokenType
@@ -41,7 +43,7 @@ consumer.task = async function (job, done) {
         } else {
             const code = await web3.eth.getCode(_log.address)
             if (code === '0x') {
-                return done()
+                return true
             }
             const tokenFuncs = await TokenHelper.getTokenFuncs()
             decimals = await web3.eth.call({ to: _log.address, data: tokenFuncs.decimals })
@@ -67,19 +69,43 @@ consumer.task = async function (job, done) {
                     _log,
                     { upsert: true, new: true })
                 _log.valueNumber = String(_log.valueNumber)
-                await elastic.indexWithoutId('trc20-tx', _log)
+                await elastic.indexWithoutId('trc20-tx', {
+                    address: _log.address,
+                    blockHash: _log.blockHash,
+                    blockNumber: _log.blockNumber,
+                    timestamp: timestamp.toISOString()
+                        .replace(/T/, ' ').replace(/\..+/, ''),
+                    from: _log.from,
+                    to: _log.to,
+                    transactionHash: _log.transactionHash,
+                    transactionIndex: _log.transactionIndex,
+                    value: _log.value,
+                    valueNumber: _log.valueNumber
+                })
             } else {
                 await db.TokenTrc21Tx.updateOne(
                     { transactionHash: transactionHash, from: _log.from, to: _log.to },
                     _log,
                     { upsert: true, new: true })
                 _log.valueNumber = String(_log.valueNumber)
-                await elastic.indexWithoutId('trc21-tx', _log)
+                await elastic.indexWithoutId('trc21-tx', {
+                    address: _log.address,
+                    blockHash: _log.blockHash,
+                    blockNumber: _log.blockNumber,
+                    timestamp: timestamp.toISOString()
+                        .replace(/T/, ' ').replace(/\..+/, ''),
+                    from: _log.from,
+                    to: _log.to,
+                    transactionHash: _log.transactionHash,
+                    transactionIndex: _log.transactionIndex,
+                    value: _log.value,
+                    valueNumber: _log.valueNumber
+                })
             }
 
             // Add token holder data.
             if (_log.from.toLowerCase() !== _log.to.toLowerCase()) {
-                q.create('TokenHolderProcess', {
+                Queue.newQueue('TokenHolderProcess', {
                     token: JSON.stringify({
                         from: _log.from.toLowerCase(),
                         to: _log.to.toLowerCase(),
@@ -87,8 +113,6 @@ consumer.task = async function (job, done) {
                         value: _log.value
                     })
                 })
-                    .priority('normal').removeOnComplete(true)
-                    .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
             }
         } else if (tokenType === 'trc721') {
             if (log.topics[3]) {
@@ -101,15 +125,27 @@ consumer.task = async function (job, done) {
                 await db.TokenNftHolder.updateOne(
                     { token: _log.address, tokenId: _log.tokenId },
                     { holder: _log.to }, { upsert: true, new: true })
-                await elastic.indexWithoutId('nft-tx', _log)
+                await elastic.indexWithoutId('nft-tx', {
+                    address: _log.address,
+                    blockHash: _log.blockHash,
+                    blockNumber: _log.blockNumber,
+                    timestamp: timestamp.toISOString()
+                        .replace(/T/, ' ').replace(/\..+/, ''),
+                    transactionHash: _log.transactionHash,
+                    transactionIndex: _log.transactionIndex,
+                    from: _log.from,
+                    to: _log.to,
+                    data: _log.data,
+                    tokenId: _log.tokenId
+                })
             }
         }
     } catch (e) {
         logger.warn('cannot process token tx. Error %s', e)
-        return done(e)
+        return false
     }
 
-    return done()
+    return true
 }
 
 module.exports = consumer
