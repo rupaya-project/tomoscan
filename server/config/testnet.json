@@ -33,7 +33,7 @@
 
   "BASE_URL": "https://scan.testnet.rupx.io/",
   "CLIENT_URL": "http://localhost:3000/",
-  "TOMOMASTER_API_URL": "https://master.testnet.rupx.io",
+  "TOMOMASTER_API_URL": "https://gov.testnet.rupx.io",
 
   "BLOCK_PER_EPOCH": 900,
   "REWARD": 250,
