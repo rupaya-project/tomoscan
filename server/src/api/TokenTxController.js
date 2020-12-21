@@ -71,17 +71,19 @@ TokenTxController.get('/token-txs/:tokenType', [
                 pages: 0,
                 items: []
             }
-            const query = {}
+            const query = { bool: { must: [] } }
             if (token) {
-                query.match = { address: token.toLowerCase() }
+                query.bool.must.push({ term: { address: token.toLowerCase() } })
             }
             if (holder) {
-                query.bool = {
-                    should: [
-                        { term: { from: holder.toLowerCase() } },
-                        { term: { to: holder.toLowerCase() } }
-                    ]
-                }
+                query.bool.must.push({
+                    bool: {
+                        should: [
+                            { term: { from: holder.toLowerCase() } },
+                            { term: { to: holder.toLowerCase() } }
+                        ]
+                    }
+                })
             }
             if (tokenType === 'trc20') {
                 eData = await elastic.search('trc20-tx', query, { blockNumber: 'desc' }, limit, page)
@@ -92,8 +94,8 @@ TokenTxController.get('/token-txs/:tokenType', [
                 const count = await elastic.count('trc21-tx', query)
                 total = count.count
             } else if (tokenType === 'trc721') {
-                eData = await elastic.search('trc721-tx', query, { blockNumber: 'desc' }, limit, page)
-                const count = await elastic.count('trc721-tx', query)
+                eData = await elastic.search('nft-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('nft-tx', query)
                 total = count.count
             } else {
                 eData = {}
@@ -106,7 +108,7 @@ TokenTxController.get('/token-txs/:tokenType', [
                 const items = []
                 for (let i = 0; i < hits.hits.length; i++) {
                     const item = hits.hits[i]._source
-                    item.timestamp = item.timestamp + ' UTC'
+                    item.timestamp = new Date(item.timestamp + ' UTC')
                     items.push(item)
                 }
                 data.items = items
