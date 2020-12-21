@@ -5,7 +5,7 @@ module.exports = {
   ** Headers of the page
   */
     head: {
-        title: 'TomoScan',
+        title: 'Scan',
         meta: [
             { charset: 'utf-8' },
             {
@@ -28,7 +28,7 @@ module.exports = {
             },
             {
                 property: 'og:title',
-                content: 'TomoScan - Rupaya block explorer'
+                content: 'Scan - Rupaya block explorer'
             },
             {
                 property: 'og:description',

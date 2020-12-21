@@ -8,11 +8,11 @@
                 <b-navbar-brand :to="{name: 'index'}">
                     <img
                         src="~/assets/img/logoLight.svg"
-                        alt="TomoScan"
+                        alt="Scan"
                         class="tomo-nav__logo logo-light">
                     <img
                         src="~/assets/img/logoDark.svg"
-                        alt="TomoScan"
+                        alt="Scan"
                         class="tomo-nav__logo logo-dark">
                 </b-navbar-brand>
                 <b-navbar-toggle
@@ -222,8 +222,8 @@
                     <b-col
                         md="6"
                         class="tomo-footer__copyright">
-                        <p>TomoScan {{ (new Date()).getFullYear() }} - <a
-                            :href="`https://github.com/tomochain/tomoscan/releases/tag/v${version}`">
+                        <p>Scan {{ (new Date()).getFullYear() }} - <a
+                            :href="`https://github.com/rupaya-project/scan/releases/tag/v${version}`">
                             v{{ version }}</a>
 
                             <code class="text-muted copyright__code">
@@ -237,35 +237,35 @@
                         <ul class="list-inline tomo-footer__social">
                             <li class="list-inline-item">
                                 <a
-                                    href="https://t.me/tomochain"
+                                    href="https://t.me/rupayaofficial"
                                     target="_blank">
                                     <i class="fa fa-telegram"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.facebook.com/tomochainofficial"
+                                    href="https://www.facebook.com/rupayacoin"
                                     target="_blank">
                                     <i class="fa fa-facebook"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://twitter.com/TomoChainANN"
+                                    href="https://twitter.com/rupayacoin"
                                     target="_blank">
                                     <i class="fa fa-twitter"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://github.com/tomochain/"
+                                    href="https://github.com/rupaya-project/"
                                     target="_blank">
                                     <i class="fa fa-github"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.reddit.com/r/Tomochain/"
+                                    href="https://www.reddit.com/r/Rupayacoin/"
                                     target="_blank">
                                     <i class="fa fa-reddit"/>
                                 </a>

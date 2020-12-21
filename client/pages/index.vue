@@ -11,7 +11,7 @@ export default {
     methods: {},
     head () {
         return {
-            title: 'TomoScan - Rupaya Block Explorer'
+            title: 'Scan - Rupaya Block Explorer'
         }
     }
 }
