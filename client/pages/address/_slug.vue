@@ -173,7 +173,7 @@
             <b-tab
                 id="trc21Holding"
                 lazy
-                title="TRC21 Holding"
+                title="RRC21 Holding"
                 href="#trc21Holding">
                 <table-tokens-by-account
                     :holder="hash"

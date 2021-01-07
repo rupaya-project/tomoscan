@@ -137,7 +137,7 @@ br.register('tokens-trc20', (brs, location) => {
 })
 br.register('tokens-trc21', (brs, location) => {
     brs.parent('tokens')
-    brs.push('TRC21 Token', location)
+    brs.push('RRC21 Token', location)
 })
 br.register('tokens-nft', (brs, location) => {
     brs.parent('tokens')
@@ -157,7 +157,7 @@ br.register('tokentxs-nft', (brs) => {
 })
 br.register('tokentxs-trc21', (brs) => {
     brs.parent('index')
-    brs.push('Token (TRC21) Transfers', { name: 'tokentxs-trc21' })
+    brs.push('Token (RRC21) Transfers', { name: 'tokentxs-trc21' })
 })
 br.register('follows', (brs) => {
     brs.parent('index')

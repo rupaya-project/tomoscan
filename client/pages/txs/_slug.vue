@@ -142,7 +142,7 @@
                                             </td>
                                         </tr>
                                         <tr v-if="tx.trc21FeeFund >= 0">
-                                            <td>TRC21 Fee Fund</td>
+                                            <td>RRC21 Fee Fund</td>
                                             <td>{{ formatUnit(toTomo(tx.trc21FeeFund, 18)) }}</td>
                                         </tr>
                                         <tr>
@@ -201,7 +201,7 @@
                                             </td>
                                         </tr>
                                         <tr v-if="tokenFee.tokenOwner">
-                                            <td>TRC21 Token Fee</td>
+                                            <td>RRC21 Token Fee</td>
                                             <td>
                                                 <nuxt-link
                                                     :to="{
@@ -223,7 +223,7 @@
                                             </td>
                                         </tr>
                                         <tr v-if="tx.trc21Txs && tx.trc21Txs.length">
-                                            <td>TRC21 Transfer</td>
+                                            <td>RRC21 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <span
@@ -258,7 +258,7 @@
                                                                     name: 'tokens-slug',
                                                                     params: {slug: tokenTx.address}}">
                                                                 <span
-                                                                    v-if="tokenTx.symbol">TRC21 {{ tokenTx.symbol }}
+                                                                    v-if="tokenTx.symbol">RRC21 {{ tokenTx.symbol }}
                                                                 </span>
                                                             </nuxt-link>
                                                         </p>

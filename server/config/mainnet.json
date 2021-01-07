@@ -20,11 +20,11 @@
     "username": "",
     "password": ""
   },
-  "TOMODEX_API": "https://dex.tomochain.com/",
-  "RELAYER_API": "https://relayer.tomochain.com/",
+  "TOMODEX_API": "https://dex.rupx.io/",
+  "RELAYER_API": "https://relayer.rupx.io/",
 
-  "WEB3_URI": "http://fullnode_scan01:8545",
-  "WEB3_WS_URI": "ws://fullnode_scan01:8546",
+  "WEB3_URI": "http://nodemaster_mnone:7050",
+  "WEB3_WS_URI": "ws://nodemaster_mntwo:8050",
   "DEBUG_QUERY": false,
 
   "BASE_UNIT": "RUPX",
