@@ -44,7 +44,7 @@
                                 <span>{{ formatNumber(usdPrice * toTomoNumber(address.balance)) }} (price from
                                     <a
                                         target="_blank"
-                                        href="https://www.coingecko.com/en/coins/tomochain">CoinGecko</a>)</span>
+                                        href="https://www.coingecko.com/en/coins/rupaya">CoinGecko</a>)</span>
                             </td>
                         </tr>
                         <tr>
