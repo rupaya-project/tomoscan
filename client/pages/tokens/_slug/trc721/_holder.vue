@@ -234,7 +234,7 @@ export default {
     },
     head () {
         return {
-            title: 'Token TRC721 Holder Info'
+            title: 'Token RRC721 Holder Info'
         }
     }
 }

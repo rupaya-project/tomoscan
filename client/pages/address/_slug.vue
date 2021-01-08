@@ -162,7 +162,7 @@
                 v-if="address && address.hasTrc20"
                 id="trc20Holding"
                 lazy
-                title="TRC20 Holding"
+                title="RRC20 Holding"
                 href="#trc20Holding">
                 <table-tokens-by-account
                     :holder="hash"
@@ -185,7 +185,7 @@
                 v-if="address && address.hasTrc721"
                 id="trc721Inventory"
                 lazy
-                title="TRC721 Inventory"
+                title="RRC721 Inventory"
                 href="#trc721Inventory">
                 <table-tokens-by-account
                     :holder="hash"

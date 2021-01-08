@@ -162,7 +162,7 @@
                                             <td>{{ formatUnit(toTomo(tx.gasPrice * tx.gasUsed, 18)) }}</td>
                                         </tr>
                                         <tr v-if="tx.trc20Txs && tx.trc20Txs.length">
-                                            <td>TRC20 Transfer</td>
+                                            <td>RRC20 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <p
@@ -194,7 +194,7 @@
                                                                 params: {slug: tokenTx.address}}">
                                                             &nbsp;
                                                             <span
-                                                                v-if="tokenTx.symbol">TRC20 {{ tokenTx.symbol }}</span>
+                                                                v-if="tokenTx.symbol">RRC20 {{ tokenTx.symbol }}</span>
                                                         </nuxt-link>
                                                     </p>
                                                 </span>
@@ -267,7 +267,7 @@
                                             </td>
                                         </tr>
                                         <tr v-if="tx.trc721Txs && tx.trc721Txs.length">
-                                            <td>TRC721 Transfer</td>
+                                            <td>RRC721 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <p
@@ -290,7 +290,7 @@
                                                             }"
                                                             class="hash-tag text-truncate">
                                                             {{ tokenTx.to }}</nuxt-link>
-                                                        <span class="text-secondary"> For TRC721 TokenID</span>
+                                                        <span class="text-secondary"> For RRC721 TokenID</span>
                                                         [{{ tokenTx.tokenId }}]
                                                         <nuxt-link
                                                             :to="{

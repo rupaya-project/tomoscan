@@ -121,7 +121,7 @@ export default {
         }
     },
     head: () => ({
-        title: 'TRC721 Tokens'
+        title: 'RRC721 Tokens'
     })
 }
 </script>
