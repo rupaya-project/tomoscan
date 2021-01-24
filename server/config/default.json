@@ -14,8 +14,8 @@
   "rabbitmq": {
     "hostname": "localhost",
     "port": 5672,
-    "username": "",
-    "password": ""
+    "username": "guest",
+    "password": "guest"
   },
   "logs": {
     "level": "debug"
