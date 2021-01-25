@@ -15,10 +15,10 @@
     "prefix": "Scan"
   },
   "rabbitmq": {
-    "hostname": "localhost",
+    "hostname": "rabbitmq",
     "port": 5672,
-    "username": "",
-    "password": ""
+    "username": "guest",
+    "password": "guest"
   },
   "TOMODEX_API": "https://dex.rupx.io/",
   "RELAYER_API": "https://relayer.rupx.io/",
