@@ -6,7 +6,7 @@
     "level": "info"
   },
   "ELASTICSEARCH": "http://elasticsearch:9200",
-  "GetDataFromElasticSearch": false,
+  "GetDataFromElasticSearch": true,
   "MaxBlockIndex": 16500000,
   "redis": {
     "host": "redis",
@@ -52,5 +52,5 @@
     "access_token_secret": ""
   },
 
-  "RUPAYAISSUER": ""
+  "RUPAYAISSUER": "0x3b12c9e741A5CA45d00b16039B0bfA8270fDdD67"
 }
