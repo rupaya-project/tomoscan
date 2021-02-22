@@ -7,7 +7,7 @@ $color-text-white-dark: #cfcde1;
 // Global Settings
 body.dark-mode {
     color: $color-text-dark;
-    background-color: #1d1e31;
+    background-color: #292929;
 
     a {
         color: $color-primary-dark;
@@ -334,7 +334,7 @@ body.dark-mode .tomo-tabs {
 
 // Card
 body.dark-mode .tomo-card {
-    background-image: linear-gradient(-135deg,#2d2d4a,#40406a,#1d1e31);
+    background-image: linear-gradient(-135deg,#2d2d4a,#40406a,#292929);
     background-size: 400% 400%;
 
     &__headline {
@@ -385,7 +385,7 @@ body.dark-mode {
     }
 
     .tooltip-inner {
-        color: #1d1e31;
+        color: #292929;
         background-color: #aca9c4;
     }
 

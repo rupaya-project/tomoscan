@@ -43,8 +43,8 @@ class EmailService {
         const stringTemplate = fs.readFileSync(path.join(__dirname, '../', 'templates', templateFile), 'utf8')
         const body = format(stringTemplate, params)
         const msg = {
-            to: 'khaihkd@gmail.com',
-            from: 'admin@tomochain.com',
+            to: 'aasim@rupx.io',
+            from: 'admin@rupx.io',
             subject: subject,
             html: body
         }

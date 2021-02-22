@@ -20,7 +20,7 @@ module.exports = {
             },
             {
                 property: 'og:url',
-                content: 'https://scan.tomochain.com'
+                content: 'https://scan.rupx.io'
             },
             {
                 property: 'og:type',
@@ -37,7 +37,7 @@ module.exports = {
             },
             {
                 property: 'og:image',
-                content: 'https://scan.tomochain.com/newlogo.png'
+                content: 'https://scan.rupx.io/newlogo.png'
             },
             {
                 property: 'og:image:height',

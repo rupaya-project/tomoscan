@@ -219,7 +219,7 @@ const mixin = {
         },
 
         checkAvatarExist: function (branch, token) {
-            const url = 'https://raw.githubusercontent.com/tomochain/tokens/' + branch +
+            const url = 'https://raw.githubusercontent.com/rupaya-project/tk/' + branch +
                 '/tokens/' + token.toLowerCase() + '.png'
             const xhr = new XMLHttpRequest()
             xhr.open('HEAD', url, false)

@@ -4,7 +4,7 @@
 
 Scan is a BlockExplorer for **Rupaya**, built with VueJS, Nuxt and MongoDB. Scan allows you to explore and search the **Rupaya** for transactions, addresses, tokens, prices and other activities taking place on **Rupaya**.
 
-A demo instance connected to the **Rupaya testnet** is available at [scan.testnet.tomochain.com](https://scan.testnet.tomochain.com/).
+A demo instance connected to the **Rupaya testnet** is available at [scan.testnet.rupx.io](https://scan.testnet.rupx.io/).
 
 ## Current Features
 - Browse blocks, transactions, accounts and contracts

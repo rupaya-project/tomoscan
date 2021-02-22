@@ -87,14 +87,14 @@ TokenController.get('/tokens/:slug', [
         }
 
         token = await TokenHelper.formatToken(token)
-        const blacklistUrl = 'https://raw.githubusercontent.com/tomochain/tokens/master/blacklist.json'
+        const blacklistUrl = 'https://raw.githubusercontent.com/rupaya-project/tk/master/blacklist.json'
         const blacklist = await axios.get(blacklistUrl)
         if (blacklist.data.includes(hash)) {
             token.isPhising = true
         } else {
             token.isPhising = false
         }
-        const verifiedUrl = 'https://raw.githubusercontent.com/tomochain/tokens/master/verifiedlist.json'
+        const verifiedUrl = 'https://raw.githubusercontent.com/rupaya-project/tk/master/verifiedlist.json'
         const verifiedList = await axios.get(verifiedUrl)
         if (verifiedList.data.includes(hash)) {
             token.isVerified = true
@@ -103,7 +103,7 @@ TokenController.get('/tokens/:slug', [
         }
         const coinList = ['0xae44807d8a9ce4b30146437474ed6faaafa1b809', '0x2eaa73bd0db20c64f53febea7b5f5e5bccc7fb8b']
         if (!coinList.includes(hash)) {
-            const bridgeUrl = 'https://raw.githubusercontent.com/tomochain/tokens/master/bridge.json'
+            const bridgeUrl = 'https://raw.githubusercontent.com/rupaya-project/tk/master/bridge.json'
             const bridgeList = await axios.get(bridgeUrl)
             if (bridgeList.data.includes(hash)) {
                 token.isWrappedToken = true
@@ -115,7 +115,7 @@ TokenController.get('/tokens/:slug', [
         }
 
         try {
-            const moreInfoUrl = `https://raw.githubusercontent.com/tomochain/tokens/master/tokens/${hash}.json`
+            const moreInfoUrl = `https://raw.githubusercontent.com/rupaya-project/tk/master/tokens/${hash}.json`
             const moreInfo = await axios.get(moreInfoUrl)
             token.moreInfo = moreInfo.data
         } catch (e) {
@@ -130,7 +130,7 @@ TokenController.get('/tokens/:slug', [
 })
 
 TokenController.get('/tokens/holding/:tokenType/:holder', [
-    check('tokenType').exists().isString().withMessage('trc20/trc21/trc721'),
+    check('tokenType').exists().isString().withMessage('rrc20/rrc21/rrc721'),
     check('holder').exists().isLength({ min: 42, max: 42 }).withMessage('Address holding token'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt().withMessage('Require page is number')

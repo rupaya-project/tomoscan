@@ -8,7 +8,7 @@
                 <h2 class="tomo-card__headline">
                     <img
                         v-if="checkAvatarExist(tokenBranch, hash)"
-                        :src="`https://raw.githubusercontent.com/tomochain/tokens/${tokenBranch}/tokens/${hash}.png`"
+                        :src="`https://raw.githubusercontent.com/rupaya-project/tk/${tokenBranch}/tokens/${hash}.png`"
                         width="35px">
                     {{ tokenName }}&nbsp;</h2>
                 <i
@@ -60,7 +60,7 @@
                                         v-else>
                                         Not Available,
                                         <a
-                                            href="https://github.com/tomochain/tokens"
+                                            href="https://github.com/rupaya-project/tokens"
                                             target="_blank"
                                             class="text-truncate">Update</a> ?
                                     </td>
@@ -108,7 +108,7 @@
                                         <span v-else>
                                             Not Available,
                                             <a
-                                                href="https://github.com/tomochain/tokens"
+                                                href="https://github.com/rupaya-project/tokens"
                                                 target="_blank"
                                                 class="text-truncate">Update</a> ?
                                         </span>
