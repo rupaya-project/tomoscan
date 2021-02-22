@@ -139,6 +139,9 @@ BlockController.get('/blocks/:slug', [
         let block = await BlockHelper.getBlockDetail(hashOrNumb)
 
         if (block === null) {
+            if (!isNaN(hashOrNumb)) {
+                return res.status(307).json({ blockNumber: hashOrNumb, message: 'This block is waiting to be created' })
+            }
             return res.status(404).json({ errors: { message: 'Block is not found!' } })
         }
         try {
@@ -189,6 +192,33 @@ BlockController.get('/blocks/:slug', [
         logger.warn('Error get block detail %s. %s', hashOrNumb, e)
         return res.status(500).json({ errors: { message: 'Something error!' } })
     }
+})
+
+BlockController.get('/blocks/countdown/:number', [
+    check('number').exists().isNumeric().withMessage('Block require is number.')
+], async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+    const number = parseInt(req.params.number)
+    const web3 = await Web3Util.getWeb3()
+    const currentBlock = await web3.eth.getBlockNumber()
+    const remainingBlock = number - currentBlock
+    const lastEpoch = await db.Epoch.find({ isActive: true }).sort({ epoch: -1 }).limit(1)
+    let blockDuration = 2
+    if (lastEpoch.length > 0) {
+        if (lastEpoch[0].duration) {
+            blockDuration = lastEpoch[0].duration / 900
+        }
+    }
+
+    return res.json({
+        currentBlock: currentBlock,
+        countdownBlock: number,
+        remainingBlock: remainingBlock,
+        blockDuration: blockDuration
+    })
 })
 
 BlockController.get('/blocks/:slug/address/:address', [
