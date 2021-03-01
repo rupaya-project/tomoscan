@@ -101,7 +101,7 @@ export default {
             const params = {
                 page: self.currentPage,
                 limit: self.perPage,
-                type: 'trc721'
+                type: 'rrc721'
             }
 
             const query = this.serializeQuery(params)

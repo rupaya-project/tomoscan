@@ -397,7 +397,7 @@ paths:
         - name: type
           in: query
           required: false
-          description: trc20|trc21|trc721, default = trc20
+          description: rrc20|rrc21|rrc721, default = rrc20
           type: string
         - name: page
           in: query
@@ -445,7 +445,7 @@ paths:
         - name: tokenType
           in: path
           required: true
-          description: trc20|trc21|trc721
+          description: rrc20|rrc21|rrc721
           type: string
         - name: holder
           in: path
@@ -466,7 +466,7 @@ paths:
     get:
       tags:
         - Token
-      summary: Get list trc20 token holder. Require 1 of 2 conditions - address | hash
+      summary: Get list rrc20 token holder. Require 1 of 2 conditions - address | hash
       parameters:
         - name: address
           in: query
@@ -505,7 +505,7 @@ paths:
         - name: tokenType
           in: path
           required: true
-          description: trc20|trc21|trc721
+          description: rrc20|rrc21|rrc721
           type: string
         - name: holder
           in: query
@@ -543,7 +543,7 @@ paths:
         - name: tokenType
           in: path
           required: true
-          description: trc20|trc21|trc721
+          description: rrc20|rrc21|rrc721
           type: string
         - name: txHash
           in: path

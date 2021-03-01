@@ -159,38 +159,38 @@
                     :page="this"/>
             </b-tab>
             <b-tab
-                v-if="address && address.hasTrc20"
-                id="trc20Holding"
+                v-if="address && address.hasRrc20"
+                id="rrc20Holding"
                 lazy
                 title="RRC20 Holding"
-                href="#trc20Holding">
+                href="#rrc20Holding">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token-type="'trc20'"
-                    :parent="'trc20Holding'"
+                    :token-type="'rrc20'"
+                    :parent="'rrc20Holding'"
                     :page="this"/>
             </b-tab>
             <b-tab
-                id="trc21Holding"
+                id="rrc21Holding"
                 lazy
                 title="RRC21 Holding"
-                href="#trc21Holding">
+                href="#rrc21Holding">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token-type="'trc21'"
-                    :parent="'trc21Holding'"
+                    :token-type="'rrc21'"
+                    :parent="'rrc21Holding'"
                     :page="this"/>
             </b-tab>
             <b-tab
-                v-if="address && address.hasTrc721"
-                id="trc721Inventory"
+                v-if="address && address.hasRrc721"
+                id="rrc721Inventory"
                 lazy
                 title="RRC721 Inventory"
-                href="#trc721Inventory">
+                href="#rrc721Inventory">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token-type="'trc721'"
-                    :parent="'trc721Inventory'"
+                    :token-type="'rrc721'"
+                    :parent="'rrc721Inventory'"
                     :page="this"/>
             </b-tab>
             <b-tab

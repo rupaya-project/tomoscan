@@ -7,44 +7,33 @@
         <div
             v-if="total == 0"
             class="tomo-empty">
-            <i class="fa fa-chain-broken tomo-empty__icon"/>
-            <p class="tomo-empty__description">No token found</p>
+            <i class="fa fa-user-secret tomo-empty__icon"/>
+            <p class="tomo-empty__description">No holder found</p>
         </div>
 
         <p
             v-if="total > 0"
-            class="tomo-total-items">{{ _nFormatNumber('token', 'tokens', total) }}</p>
+            class="tomo-total-items">{{ _nFormatNumber('holder', 'holders', total) }}</p>
 
         <table-base
             v-if="total > 0"
             :fields="fields"
             :items="items"
-            class="tomo-table--tokens-nft">
-
+            class="tomo-table--holders">
             <template
                 slot="hash"
                 slot-scope="props">
-                <nuxt-link :to="{name: 'tokens-slug', params: {slug: props.item.hash}}">
-                    <span class="text-truncate">{{ props.item.hash }}</span>
-                </nuxt-link>
+                <nuxt-link
+                    :to="{name: 'tokens-slug-rrc21-holder', params: { slug: address, holder: props.item.hash}}"
+                    class="text-truncate">{{ props.item.hash }}</nuxt-link>
             </template>
 
             <template
-                slot="name"
+                slot="quantity"
                 slot-scope="props">
-                <nuxt-link :to="{name: 'tokens-slug', params: {slug: props.item.hash}}">
-                    {{ trimWord(props.item.name) }}
-                </nuxt-link>
+                {{ formatUnit(toTokenQuantity(props.item.quantity, props.item.tokenObj.decimals),
+                              props.item.tokenObj.symbol) }}
             </template>
-
-            <template
-                slot="symbol"
-                slot-scope="props">{{ props.item.symbol }}</template>
-
-            <template
-                slot="totalSupply"
-                slot-scope="props">{{ formatNumber(props.item.totalSupplyNumber) }} {{ props.item.symbol }}</template>
-
         </table-base>
 
         <b-pagination
@@ -68,27 +57,37 @@ export default {
         TableBase
     },
     mixins: [mixin],
+    props: {
+        address: {
+            type: String,
+            default: ''
+        },
+        page: {
+            type: Object,
+            default: () => {
+                return {}
+            }
+        },
+        parent: {
+            type: String,
+            default: ''
+        }
+    },
     data: () => ({
         fields: {
-            hash: { label: 'Hash' },
-            name: { label: 'Name' },
-            symbol: { label: 'Symbol' },
-            totalSupply: { label: 'Total Supply' }
+            rank: { label: 'Rank' },
+            hash: { label: 'Address' },
+            quantity: { label: 'Quantity' },
+            percentage: { label: 'Percentage' }
         },
         loading: true,
         total: 0,
         items: [],
         currentPage: 1,
-        perPage: 20,
+        perPage: 15,
         pages: 1
     }),
-    mounted () {
-        // Init breadcrumbs data.
-        this.$store.commit('breadcrumb/setItems', {
-            name: 'tokens-trc21',
-            to: { name: 'tokens-trc21' }
-        })
-
+    async mounted () {
         this.getDataFromApi()
     },
     methods: {
@@ -97,18 +96,24 @@ export default {
 
             // Show loading.
             self.loading = true
-
             const params = {
                 page: self.currentPage,
-                limit: self.perPage,
-                type: 'trc21'
+                limit: self.perPage
+            }
+
+            if (self.address) {
+                params.address = self.address
             }
 
             const query = this.serializeQuery(params)
-            const { data } = await this.$axios.get('/api/tokens' + '?' + query)
+            const { data } = await this.$axios.get('/api/token-holders/rrc21' + '?' + query)
             self.items = data.items
             self.total = data.total
             self.pages = data.pages
+
+            if (self.page) {
+                self.page.holdersCount = self.total
+            }
 
             // Hide loading.
             self.loading = false
@@ -119,9 +124,6 @@ export default {
             this.currentPage = page
             this.getDataFromApi()
         }
-    },
-    head: () => ({
-        title: 'Trc21 Token'
-    })
+    }
 }
 </script>

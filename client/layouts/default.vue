@@ -58,10 +58,10 @@
                         <b-nav-item-dropdown
                             :class="(isTokens || isTokenTxs) ? 'active' : ''"
                             text="Tokens">
-                            <b-dropdown-item :to="{name: 'tokens-trc20'}">RRC20 Tokens</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokens-rrc20'}">RRC20 Tokens</b-dropdown-item>
                             <b-dropdown-item :to="{name: 'tokentxs'}">RRC20 Transfers</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokens-trc21'}">RRC21 Tokens</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokentxs-trc21'}">RRC21 Transfers</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokens-rrc21'}">RRC21 Tokens</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokentxs-rrc21'}">RRC21 Transfers</b-dropdown-item>
                             <b-dropdown-item :to="{name: 'tokens-nft'}">RRC721 Tokens</b-dropdown-item>
                             <b-dropdown-item :to="{name: 'tokentxs-nft'}">RRC721 Transfers</b-dropdown-item>
                         </b-nav-item-dropdown>

@@ -141,9 +141,9 @@
                                                 </small>
                                             </td>
                                         </tr>
-                                        <tr v-if="tx.trc21FeeFund >= 0">
+                                        <tr v-if="tx.rrc21FeeFund >= 0">
                                             <td>RRC21 Fee Fund</td>
-                                            <td>{{ formatUnit(toTomo(tx.trc21FeeFund, 18)) }}</td>
+                                            <td>{{ formatUnit(toTomo(tx.rrc21FeeFund, 18)) }}</td>
                                         </tr>
                                         <tr>
                                             <td>Value</td>
@@ -161,18 +161,18 @@
                                             <td>Actual Tx Cost/Fee</td>
                                             <td>{{ formatUnit(toTomo(tx.gasPrice * tx.gasUsed, 18)) }}</td>
                                         </tr>
-                                        <tr v-if="tx.trc20Txs && tx.trc20Txs.length">
+                                        <tr v-if="tx.rrc20Txs && tx.rrc20Txs.length">
                                             <td>RRC20 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <p
-                                                        v-for="(tokenTx, index) in tx.trc20Txs"
+                                                        v-for="(tokenTx, index) in tx.rrc20Txs"
                                                         :key="index"
                                                         class="mb-3">
                                                         <span class="text-secondary">From </span>
                                                         <nuxt-link
                                                             :to="{
-                                                                name: 'tokens-slug-trc20-holder',
+                                                                name: 'tokens-slug-rrc20-holder',
                                                                 params: {slug: tokenTx.address, holder: tokenTx.from}
                                                             }"
                                                             class="hash-tag text-truncate">
@@ -180,7 +180,7 @@
                                                         <span class="text-secondary"> To </span>
                                                         <nuxt-link
                                                             :to="{
-                                                                name: 'tokens-slug-trc20-holder',
+                                                                name: 'tokens-slug-rrc20-holder',
                                                                 params: {slug: tokenTx.address, holder: tokenTx.to}
                                                             }"
                                                             class="hash-tag text-truncate">
@@ -215,26 +215,26 @@
                                                 <span class="text-secondary"> For Token Issuer </span>
                                                 <nuxt-link
                                                     :to="{
-                                                        name: 'tokens-slug-trc21-holder',
+                                                        name: 'tokens-slug-rrc21-holder',
                                                         params: {slug: tokenFee.token, holder: tokenFee.tokenOwner}
                                                     }"
                                                     class="hash-tag text-truncate">
                                                     {{ tokenFee.tokenOwner }}</nuxt-link>
                                             </td>
                                         </tr>
-                                        <tr v-if="tx.trc21Txs && tx.trc21Txs.length">
+                                        <tr v-if="tx.rrc21Txs && tx.rrc21Txs.length">
                                             <td>RRC21 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <span
-                                                        v-for="(tokenTx, index) in tx.trc21Txs"
+                                                        v-for="(tokenTx, index) in tx.rrc21Txs"
                                                         :key="index"
                                                         class="mb-3">
                                                         <p>
                                                             <span class="text-secondary">From </span>
                                                             <nuxt-link
                                                                 :to="{
-                                                                    name: 'tokens-slug-trc21-holder',
+                                                                    name: 'tokens-slug-rrc21-holder',
                                                                     params: { slug: tokenTx.address,
                                                                               holder: tokenTx.from }
                                                                 }"
@@ -243,7 +243,7 @@
                                                             <span class="text-secondary"> To </span>
                                                             <nuxt-link
                                                                 :to="{
-                                                                    name: 'tokens-slug-trc21-holder',
+                                                                    name: 'tokens-slug-rrc21-holder',
                                                                     params: {slug: tokenTx.address,
                                                                              holder: tokenTx.to}
                                                                 }"
@@ -266,18 +266,18 @@
                                                 </span>
                                             </td>
                                         </tr>
-                                        <tr v-if="tx.trc721Txs && tx.trc721Txs.length">
+                                        <tr v-if="tx.rrc721Txs && tx.rrc721Txs.length">
                                             <td>RRC721 Transfer</td>
                                             <td>
                                                 <span class="token-transfer">
                                                     <p
-                                                        v-for="(tokenTx, index) in tx.trc721Txs"
+                                                        v-for="(tokenTx, index) in tx.rrc721Txs"
                                                         :key="index"
                                                         class="mb-3">
                                                         <span class="text-secondary">From </span>
                                                         <nuxt-link
                                                             :to="{
-                                                                name: 'tokens-slug-trc721-holder',
+                                                                name: 'tokens-slug-rrc721-holder',
                                                                 params: {slug: tokenTx.address, holder: tokenTx.from}
                                                             }"
                                                             class="hash-tag text-truncate">
@@ -285,7 +285,7 @@
                                                         <span class="text-secondary"> To </span>
                                                         <nuxt-link
                                                             :to="{
-                                                                name: 'tokens-slug-trc721-holder',
+                                                                name: 'tokens-slug-rrc721-holder',
                                                                 params: {slug: tokenTx.address, holder: tokenTx.to}
                                                             }"
                                                             class="hash-tag text-truncate">
@@ -487,14 +487,14 @@ export default {
 
             self.eventsCount = responses[1].data.events
 
-            if (self.tx.trc21Txs && self.tx.trc21Txs.length > 1 && self.tx.to_model) {
+            if (self.tx.rrc21Txs && self.tx.rrc21Txs.length > 1 && self.tx.to_model) {
                 self.tokenFee.tokenOwner = self.tx.to_model.contractCreation
-                for (let i = 0; i < self.tx.trc21Txs.length; i++) {
-                    if (self.tokenFee.tokenOwner === self.tx.trc21Txs[i].to) {
-                        self.tokenFee.value = self.tx.trc21Txs[i].value
-                        self.tokenFee.decimals = self.tx.trc21Txs[i].decimals
-                        self.tokenFee.symbol = self.tx.trc21Txs[i].symbol
-                        self.tokenFee.token = self.tx.trc21Txs[i].address
+                for (let i = 0; i < self.tx.rrc21Txs.length; i++) {
+                    if (self.tokenFee.tokenOwner === self.tx.rrc21Txs[i].to) {
+                        self.tokenFee.value = self.tx.rrc21Txs[i].value
+                        self.tokenFee.decimals = self.tx.rrc21Txs[i].decimals
+                        self.tokenFee.symbol = self.tx.rrc21Txs[i].symbol
+                        self.tokenFee.token = self.tx.rrc21Txs[i].address
                     }
                 }
             }

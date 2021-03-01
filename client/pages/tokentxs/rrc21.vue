@@ -1,19 +1,19 @@
 <template>
     <section>
-        <table-token-tx-trc21/>
+        <table-token-tx-rrc21/>
     </section>
 </template>
 
 <script>
-import TableTokenTxTrc21 from '~/components/TableTokenTxTrc21'
+import TableTokenTxRrc21 from '~/components/TableTokenTxRrc21'
 
 export default {
     components: {
-        TableTokenTxTrc21
+        TableTokenTxRrc21
     },
     async mounted () {
         // Init breadcrumbs data.
-        this.$store.commit('breadcrumb/setItems', { name: 'tokentxs-trc21', to: { name: 'tokentxs-trc21' } })
+        this.$store.commit('breadcrumb/setItems', { name: 'tokentxs-rrc21', to: { name: 'tokentxs-rrc21' } })
     },
     head () {
         return {

@@ -36,7 +36,7 @@ const watch = async () => {
                 if (!block || block.e_tx > txes.length) {
                     await db.Tx.remove({ blockNumber: i })
                     await db.TokenTx.remove({ blockNumber: i })
-                    await db.TokenTrc21Tx.remove({ blockNumber: i })
+                    await db.TokenRrc21Tx.remove({ blockNumber: i })
                     await db.TokenNftTx.remove({ blockNumber: i })
                     await db.InternalTx.remove({ blockNumber: i })
                     Queue.newQueue('BlockProcess', { block: i })
@@ -77,25 +77,25 @@ const watch = async () => {
                     }
                     const tokenTx = await db.TokenTx.find({ blockNumber: i })
                     if (tokenTx.length > 0) {
-                        logger.info('Index %s trc20-tx of block %s', tokenTx.length, i)
+                        logger.info('Index %s rrc20-tx of block %s', tokenTx.length, i)
                     }
                     for (let j = 0; j < tokenTx.length; j++) {
                         const tx = tokenTx[j].toJSON()
                         tx.valueNumber = String(tx.valueNumber)
                         delete tx._id
                         delete tx.id
-                        await elastic.indexWithoutId('trc20-tx', tx)
+                        await elastic.indexWithoutId('rrc20-tx', tx)
                     }
-                    const trc21Tx = await db.TokenTrc21Tx.find({ blockNumber: i })
-                    if (trc21Tx.length > 0) {
-                        logger.info('Index %s trc21-tx of block %s', trc21Tx.length, i)
+                    const rrc21Tx = await db.TokenRrc21Tx.find({ blockNumber: i })
+                    if (rrc21Tx.length > 0) {
+                        logger.info('Index %s rrc21-tx of block %s', rrc21Tx.length, i)
                     }
-                    for (let j = 0; j < trc21Tx.length; j++) {
-                        const tx = trc21Tx[j].toJSON()
+                    for (let j = 0; j < rrc21Tx.length; j++) {
+                        const tx = rrc21Tx[j].toJSON()
                         tx.valueNumber = String(tx.valueNumber)
                         delete tx._id
                         delete tx.id
-                        await elastic.indexWithoutId('trc21-tx', tx)
+                        await elastic.indexWithoutId('rrc21-tx', tx)
                     }
                     const nftTx = await db.TokenNftTx.find({ blockNumber: i })
                     if (nftTx.length > 0) {

@@ -19,7 +19,7 @@
             v-if="total > 0"
             :fields="fields"
             :items="items"
-            class="tomo-table--tokens">
+            class="tomo-table--tokens-nft">
 
             <template
                 slot="hash"
@@ -45,9 +45,6 @@
                 slot="totalSupply"
                 slot-scope="props">{{ formatNumber(props.item.totalSupplyNumber) }} {{ props.item.symbol }}</template>
 
-            <template
-                slot="decimals"
-                slot-scope="props">{{ formatNumber(props.item.decimals) }}</template>
         </table-base>
 
         <b-pagination
@@ -76,8 +73,7 @@ export default {
             hash: { label: 'Hash' },
             name: { label: 'Name' },
             symbol: { label: 'Symbol' },
-            totalSupply: { label: 'Total Supply' },
-            decimals: { label: 'Decimals' }
+            totalSupply: { label: 'Total Supply' }
         },
         loading: true,
         total: 0,
@@ -89,8 +85,8 @@ export default {
     mounted () {
         // Init breadcrumbs data.
         this.$store.commit('breadcrumb/setItems', {
-            name: 'tokens-trc20',
-            to: { name: 'tokens-trc20' }
+            name: 'tokens-rrc21',
+            to: { name: 'tokens-rrc21' }
         })
 
         this.getDataFromApi()
@@ -105,7 +101,7 @@ export default {
             const params = {
                 page: self.currentPage,
                 limit: self.perPage,
-                type: 'trc20'
+                type: 'rrc21'
             }
 
             const query = this.serializeQuery(params)
@@ -125,7 +121,7 @@ export default {
         }
     },
     head: () => ({
-        title: 'Trc20 Tokens'
+        title: 'Rrc21 Token'
     })
 }
 </script>

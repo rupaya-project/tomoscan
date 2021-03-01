@@ -10,7 +10,7 @@ const elastic = require('../helpers/elastic')
 const TokenTxController = Router()
 
 TokenTxController.get('/token-txs/:tokenType', [
-    check('tokenType').exists().isString().withMessage('trc20/trc21/trc721'),
+    check('tokenType').exists().isString().withMessage('rrc20/rrc21/rrc721'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt({ max: 500 }).withMessage('Page is less than or equal 500'),
     check('holder').optional().isLength({ min: 42, max: 42 }).withMessage('Account address is incorrect.'),
@@ -47,11 +47,11 @@ TokenTxController.get('/token-txs/:tokenType', [
                 total = null
             }
             params.sort = { blockNumber: -1 }
-            if (tokenType === 'trc20') {
+            if (tokenType === 'rrc20') {
                 data = await paginate(req, 'TokenTx', params, total)
-            } else if (tokenType === 'trc21') {
-                data = await paginate(req, 'TokenTrc21Tx', params, total)
-            } else if (tokenType === 'trc721') {
+            } else if (tokenType === 'rrc21') {
+                data = await paginate(req, 'TokenRrc21Tx', params, total)
+            } else if (tokenType === 'rrc721') {
                 data = await paginate(req, 'TokenNftTx', params, total)
             } else {
                 data = {
@@ -85,15 +85,15 @@ TokenTxController.get('/token-txs/:tokenType', [
                     }
                 })
             }
-            if (tokenType === 'trc20') {
-                eData = await elastic.search('trc20-tx', query, { blockNumber: 'desc' }, limit, page)
-                const count = await elastic.count('trc20-tx', query)
+            if (tokenType === 'rrc20') {
+                eData = await elastic.search('rrc20-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('rrc20-tx', query)
                 total = count.count
-            } else if (tokenType === 'trc21') {
-                eData = await elastic.search('trc21-tx', query, { blockNumber: 'desc' }, limit, page)
-                const count = await elastic.count('trc21-tx', query)
+            } else if (tokenType === 'rrc21') {
+                eData = await elastic.search('rrc21-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('rrc21-tx', query)
                 total = count.count
-            } else if (tokenType === 'trc721') {
+            } else if (tokenType === 'rrc721') {
                 eData = await elastic.search('nft-tx', query, { blockNumber: 'desc' }, limit, page)
                 const count = await elastic.count('nft-tx', query)
                 total = count.count
@@ -132,7 +132,7 @@ TokenTxController.get('/token-txs/:tokenType', [
 })
 
 TokenTxController.get('/token-txs/:tokenType/:txHash', [
-    check('tokenType').exists().isString().withMessage('trc20/trc21/trc721'),
+    check('tokenType').exists().isString().withMessage('rrc20/rrc21/rrc721'),
     check('txHash').exists().isString().withMessage('transaction hash'),
     check('holder').optional().isLength({ min: 42, max: 42 }).withMessage('Account address is incorrect.'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
@@ -158,11 +158,11 @@ TokenTxController.get('/token-txs/:tokenType/:txHash', [
         }
         params.sort = { blockNumber: -1 }
         let data
-        if (tokenType === 'trc20') {
+        if (tokenType === 'rrc20') {
             data = await paginate(req, 'TokenTx', params, null)
-        } else if (tokenType === 'trc21') {
-            data = await paginate(req, 'TokenTrc21Tx', params, null)
-        } else if (tokenType === 'trc721') {
+        } else if (tokenType === 'rrc21') {
+            data = await paginate(req, 'TokenRrc21Tx', params, null)
+        } else if (tokenType === 'rrc721') {
             data = await paginate(req, 'TokenNftTx', params, null)
         } else {
             data = {

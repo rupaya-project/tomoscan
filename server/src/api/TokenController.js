@@ -11,7 +11,7 @@ const { check, validationResult, query } = require('express-validator/check')
 const TokenController = Router()
 
 TokenController.get('/tokens', [
-    check('type').optional().isString().withMessage('Default is trc-20'),
+    check('type').optional().isString().withMessage('Default is rrc-20'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt().withMessage('Require page is number')
 ], async (req, res) => {
@@ -144,9 +144,9 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
 
     try {
         let data
-        if (tokenType === 'trc20') {
+        if (tokenType === 'rrc20') {
             data = await utils.paginate(req, 'TokenHolder', { query: { hash: holder } })
-        } else if (tokenType === 'trc21') {
+        } else if (tokenType === 'rrc21') {
             const dexToken = await dexDb.Token.distinct('contractAddress')
             const listToken = []
             for (let i = 0; i < dexToken.length; i++) {
@@ -156,7 +156,7 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
                 }
             }
             const tomoxToken = await db.Token.find({ hash: { $in: listToken } })
-            const holderExist = await db.TokenTrc21Holder.find({ hash: holder, token: { $in: listToken } },
+            const holderExist = await db.TokenRrc21Holder.find({ hash: holder, token: { $in: listToken } },
                 { token: 1 })
             const exist = []
             for (let i = 0; i < holderExist.length; i++) {
@@ -175,10 +175,10 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
                 }
             }
             if (notExist.length > 0) {
-                await db.TokenTrc21Holder.insertMany(notExist)
+                await db.TokenRrc21Holder.insertMany(notExist)
             }
-            data = await utils.paginate(req, 'TokenTrc21Holder', { query: { hash: holder } })
-        } else if (tokenType === 'trc721') {
+            data = await utils.paginate(req, 'TokenRrc21Holder', { query: { hash: holder } })
+        } else if (tokenType === 'rrc721') {
             data = await utils.paginate(req, 'TokenNftHolder', { query: { holder: holder } })
         } else {
             data = { total: 0, perPage: 20, currentPage: 1, pages: 0, items: [] }
@@ -208,7 +208,7 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
                                 .trim()
                             items[i].tokenObj = tokens[j]
 
-                            if (tokenType === 'trc20' || tokenType === 'trc21') {
+                            if (tokenType === 'rrc20' || tokenType === 'rrc21') {
                                 const tk = await TokenHelper.getTokenBalance(
                                     { hash: tokens[j].hash, decimals: tokens[j].decimals }, items[i].hash)
                                 items[i].quantity = tk.quantity
@@ -248,7 +248,7 @@ TokenController.get('/tokens/:token/holder/:holder', [
         let tokenHolder = await db.TokenHolder.findOne({ hash: holder, token: token })
         let exist = true
         if (!tokenHolder) {
-            tokenHolder = await db.TokenTrc21Holder.findOne({ hash: holder, token: token })
+            tokenHolder = await db.TokenRrc21Holder.findOne({ hash: holder, token: token })
             if (!tokenHolder) {
                 tokenHolder = {
                     hash: holder,
@@ -276,10 +276,10 @@ TokenController.get('/tokens/:token/holder/:holder', [
         if (exist) {
             await tokenHolder.save()
         } else {
-            if (tk && tk.type === 'trc20') {
+            if (tk && tk.type === 'rrc20') {
                 await db.TokenHolder.insertMany([tokenHolder])
-            } else if (tk && tk.type === 'trc21') {
-                await db.TokenTrc21Holder.insertMany([tokenHolder])
+            } else if (tk && tk.type === 'rrc21') {
+                await db.TokenRrc21Holder.insertMany([tokenHolder])
             }
         }
         res.json(tokenHolder)
