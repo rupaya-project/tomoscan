@@ -12,7 +12,7 @@ const contractAddress = require('../contracts/contractAddress')
 const accountName = require('../contracts/accountName')
 const logger = require('../helpers/logger')
 const { check, validationResult } = require('express-validator/check')
-const TomoIssuer = require('../contracts/abi/TomoIssuer')
+const RupayaIssuer = require('../contracts/abi/TomoIssuer')
 const config = require('config')
 
 const TxController = Router()
@@ -583,16 +583,16 @@ TxController.get(['/txs/:slug', '/tx/:slug'], [
         if (rrc21Txs.length > 0) {
             try {
                 const web3 = await await Web3Util.getWeb3()
-                const contract = new web3.eth.Contract(TomoIssuer, config.get('TOMOISSUER'))
+                const contract = new web3.eth.Contract(RupayaIssuer, config.get('RUPAYAISSUER'))
                 const listToken = await contract.methods.tokens().call()
-                let isRegisterOnTomoIssuer = false
+                let isRegisterOnRupayaIssuer = false
                 for (let i = 0; i < listToken.length; i++) {
                     if (listToken[i].toLowerCase() === tx.to.toLowerCase()) {
-                        isRegisterOnTomoIssuer = true
+                        isRegisterOnRupayaIssuer = true
                         break
                     }
                 }
-                if (isRegisterOnTomoIssuer) {
+                if (isRegisterOnRupayaIssuer) {
                     rrc21FeeFund = await contract.methods.getTokenCapacity(tx.to).call()
                 } else {
                     rrc21FeeFund = -1
